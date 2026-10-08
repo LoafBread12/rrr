@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رحلة بين الرؤى والنجوم</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;800&display=swap">
+<style>
+
+:root{--bg:#070b1f;--gold:#dfb05b;--ink:#f4efe4;--mut:#b4bce0;--card:rgba(255,255,255,.07);--vio:#7b5cff;--ok:#3ddc97;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tajawal,Tahoma,sans-serif;overflow-x:hidden;line-height:1.75}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+#bar{position:fixed;top:0;right:0;height:5px;width:0;background:linear-gradient(90deg,var(--gold),var(--vio));z-index:30;box-shadow:0 0 12px var(--gold)}
+#score{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;z-index:30;background:rgba(7,11,31,.8);border:2px solid var(--gold);border-radius:99px;padding:4px 14px;font-weight:800;color:var(--gold);backdrop-filter:blur(6px)}
+#score.bump{animation:bm .5s}@keyframes bm{50%{transform:scale(1.35)}}
+#toast{position:fixed;left:50%;top:70px;transform:translate(-50%,-20px);background:var(--gold);color:#0b1230;font-weight:800;padding:8px 20px;border-radius:99px;opacity:0;z-index:40;transition:.4s;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+section{position:relative;z-index:1;min-height:90vh;padding:70px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px}
+h1,h2,h3{margin:0;font-weight:800}
+h1{font-size:clamp(2.3rem,9vw,5.2rem);background:linear-gradient(120deg,#fff,var(--gold),#fff);background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:200%}}
+h2{font-size:clamp(1.8rem,6vw,3.4rem)}h3{font-size:clamp(1.3rem,4.4vw,2rem);color:var(--gold)}
+p{margin:0;max-width:680px;font-size:clamp(1.05rem,3.4vw,1.4rem);color:var(--mut)}
+.st{display:flex;align-items:center;gap:14px}
+.num{width:clamp(54px,12vw,84px);aspect-ratio:1;border-radius:50%;background:var(--gold);color:#0b1230;font-weight:800;font-size:clamp(1.6rem,6vw,3rem);display:grid;place-items:center;animation:pu 3s ease-in-out infinite}
+@keyframes pu{0%,100%{box-shadow:0 0 0 8px rgba(223,176,91,.18),0 0 40px rgba(223,176,91,.5)}50%{box-shadow:0 0 0 16px rgba(223,176,91,.08),0 0 70px rgba(223,176,91,.7)}}
+.lab{font-size:clamp(1.6rem,6vw,3rem);font-weight:800}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s,transform .9s}.rv.in{opacity:1;transform:none}
+.btn{font:inherit;font-weight:800;background:var(--gold);color:#0b1230;border:0;border-radius:99px;padding:12px 26px;font-size:1.1rem;cursor:pointer;transition:transform .2s;box-shadow:0 0 24px rgba(223,176,91,.45)}
+.btn:active{transform:scale(.94)}.btn.o{background:transparent;color:var(--gold);border:2px solid var(--gold);box-shadow:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.verse{font-family:Amiri,serif;font-size:clamp(1.5rem,5vw,2.4rem);line-height:2;color:#fff;border:2px solid var(--gold);border-radius:22px;padding:14px 22px;max-width:760px;background:var(--card);box-shadow:0 0 40px rgba(223,176,91,.18)}
+.verse small{display:block;color:var(--gold);font-family:Tajawal;font-size:1rem}
+.c2{background:var(--card);border:1px solid rgba(255,255,255,.15);border-radius:28px;padding:22px 18px;max-width:800px;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;backdrop-filter:blur(8px)}
+.tag{background:var(--gold);color:#0b1230;font-weight:800;border-radius:99px;padding:2px 16px;font-size:.95rem}
+details{width:100%;text-align:right;font-size:.95rem;color:var(--mut)}summary{cursor:pointer;color:var(--gold);font-weight:800}
+details b{color:#fff}
+.msg{min-height:1.6em;color:#fff;font-size:1.15rem;font-weight:500}
+.moon{width:clamp(110px,26vw,180px);animation:fl 6s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(223,176,91,.6))}
+@keyframes fl{50%{transform:translateY(-16px) rotate(6deg)}}
+.hint{animation:bn 2s infinite;color:var(--gold);font-size:2rem}@keyframes bn{50%{transform:translateY(10px)}}
+.big{font-size:clamp(3.4rem,14vw,7rem);font-weight:800;color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(223,176,91,.6)}
+/* A sky */
+.sk{position:relative;width:min(92vw,440px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(123,92,255,.25),transparent 70%)}
+.sk button{position:absolute;border:0;background:transparent;font-size:clamp(1.6rem,6vw,2.3rem);cursor:pointer;transform:translate(-50%,-50%);filter:grayscale(1) brightness(.6);transition:.4s;padding:0;line-height:1}
+.sk button.on{filter:none;transform:translate(-50%,-50%) scale(1.35);text-shadow:0 0 18px #ffd76a}
+.sk .ct{left:50%;top:50%;font-size:2.6rem}
+/* well */
+.wsky{position:relative;width:min(92vw,460px);height:200px;border-radius:24px 24px 0 0;overflow:hidden;background:#142058;transition:background .3s}
+.wsky i{position:absolute;font-style:normal;font-size:2.4rem;transform:translate(-50%,-50%)}
+.wsky:after{content:"";position:absolute;left:0;right:0;bottom:0;height:34px;background:#2a1e12}
+.well{width:min(92vw,460px);height:130px;background:radial-gradient(ellipse at 50% 0,#000 40%,#1a1209 41%,#0b0805);border-radius:0 0 60% 60%/0 0 100% 100%;display:grid;place-items:center;color:var(--gold);font-size:2.6rem;font-weight:800}
+/* coins */
+.coins{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;width:min(92vw,420px)}
+.coin{aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2b3,#d9a02c 60%,#8a5d0d);box-shadow:0 0 10px rgba(255,200,60,.5);transform:scale(0);transition:.35s cubic-bezier(.3,1.8,.5,1)}.coin.on{transform:scale(1)}
+/* granary */
+.bar{width:min(92vw,420px);height:34px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;border:2px solid var(--gold)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f6c453,#ffe28a);transition:width .8s}
+.yrs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.yrs b{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.08);display:grid;place-items:center;font-size:1.4rem;transition:.4s}.yrs b.on{background:var(--gold);transform:translateY(-6px)}.yrs b.lean.on{background:#8a6a3a}
+/* shirt */
+.blur{width:min(92vw,420px);aspect-ratio:2;border-radius:24px;background:radial-gradient(circle at 30% 40%,#ffd76a 0 3%,transparent 4%),radial-gradient(circle at 70% 30%,#fff 0 2%,transparent 3%),radial-gradient(circle at 55% 70%,#8fe3e8 0 3%,transparent 4%),linear-gradient(135deg,#1b2a6b,#3a1d6e);filter:blur(16px) brightness(.5);transition:filter 3s}.blur.clear{filter:blur(0) brightness(1.1)}
+/* time slider */
+input[type=range]{width:min(86vw,440px);accent-color:var(--gold);direction:ltr;height:34px}
+.ring{position:relative;width:min(80vw,300px);aspect-ratio:1}.ring i{position:absolute;font-style:normal;font-size:1.7rem;left:50%;top:50%;transition:transform 1.2s cubic-bezier(.3,1.4,.5,1)}
+.age{font-size:1.4rem;color:var(--gold);font-weight:800}
+/* flip */
+.fl{perspective:800px;width:min(44vw,200px);height:150px;cursor:pointer}.fl div{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}.fl.f div{transform:rotateY(180deg)}.fl span{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;display:grid;place-items:center;padding:10px;font-weight:800;border:2px solid var(--gold);background:var(--card);font-size:.98rem}.fl span+span{transform:rotateY(180deg);background:var(--gold);color:#0b1230;font-weight:500}
+.grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:900px}
+/* sun */
+.sunw{position:relative;display:grid;place-items:center}.sunw:before{content:"";position:absolute;inset:-22%;border-radius:50%;background:repeating-conic-gradient(rgba(255,190,60,.35) 0 4deg,transparent 4deg 15deg);-webkit-mask:radial-gradient(circle,transparent 40%,#000 41%,transparent 70%);mask:radial-gradient(circle,transparent 40%,#000 41%,transparent 70%);animation:sp 40s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sun{position:relative;width:min(70vw,300px);aspect-ratio:1;border-radius:50%;box-shadow:0 0 80px 30px rgba(255,200,100,.4);overflow:hidden;transition:background .3s,box-shadow .3s}
+.dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#3b8cff;opacity:0;animation:dn .6s forwards}@keyframes dn{to{opacity:.95}}
+.spec{display:flex;width:min(92vw,460px);height:30px;border-radius:99px;overflow:hidden;border:2px solid var(--gold)}.spec i{flex:1;background:var(--c);transition:opacity .2s}
+.shd{position:relative;width:min(92vw,460px);height:230px;border-radius:24px;overflow:hidden;background:linear-gradient(#1f6fd1,#8fd0ff)}.shd:after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;background:#3b4a22}.pole{position:absolute;bottom:40px;left:50%;width:10px;height:90px;margin-left:-5px;background:#7a5a2a;border-radius:4px;z-index:2}.sdw{position:absolute;bottom:40px;height:9px;background:rgba(0,0,0,.55);border-radius:4px;transform-origin:left center}.shd i{position:absolute;font-style:normal;font-size:2.6rem;transform:translate(-50%,-50%)}
+.mz{position:relative;width:min(92vw,460px);height:240px;border-radius:24px;overflow:hidden;background:linear-gradient(#0d1540,#2a2a5a)}.mz .m{position:absolute;left:50%;width:56px;height:56px;margin-left:-28px;border-radius:50%;transition:.2s}.mz .sk2{position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(90deg,#0a0a12 0 8%,transparent 8% 10%,#0a0a12 10% 22%,transparent 22% 24%,#0a0a12 24% 33%,transparent 33% 36%,#0a0a12 36% 55%,transparent 55% 58%,#0a0a12 58% 70%,transparent 70% 72%,#0a0a12 72% 100%);clip-path:polygon(0 40%,8% 40%,8% 10%,22% 10%,22% 55%,33% 55%,33% 0,55% 0,55% 35%,70% 35%,70% 20%,100% 20%,100% 100%,0 100%);transition:opacity .6s}
+.tw{display:flex;gap:40px;align-items:center;justify-content:center;height:120px}.tw div{display:flex;flex-direction:column;align-items:center;gap:12px;font-size:.9rem;color:var(--mut)}.tw i{display:block;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}.tw .s{width:4px;height:4px}.tw .pl2{width:22px;height:22px;background:#e8c07a;box-shadow:0 0 16px #e8c07a}.turb .s{animation:fk .18s infinite}.turb .pl2{animation:fk2 .3s infinite}@keyframes fk{0%{transform:translate(0,0) scale(1);opacity:1}25%{transform:translate(3px,-2px) scale(2.2);opacity:.2}50%{transform:translate(-3px,2px) scale(.8);opacity:1}75%{transform:translate(2px,3px) scale(2);opacity:.3}100%{transform:translate(0,0);opacity:1}}@keyframes fk2{50%{transform:translate(.6px,.6px)}}
+.hz{position:relative;width:min(92vw,460px);height:220px;border-radius:24px;overflow:hidden;transition:background .3s}.hz i{position:absolute;width:70px;height:70px;border-radius:50%;left:50%;transition:.2s;transform:translateX(-50%)}.hz:after{content:"";position:absolute;left:0;right:0;bottom:0;height:34px;background:#1a1f14}
+.trk{direction:ltr;position:relative;width:min(92vw,560px);height:60px;display:flex;justify-content:space-between;align-items:center}.trk:before{content:"";position:absolute;left:30px;right:30px;top:50%;border-top:2px dashed rgba(255,255,255,.25)}.ball{width:34px;height:34px;border-radius:50%;z-index:1}.ph{position:absolute;top:calc(50% - 6px);left:30px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 16px 6px #ffd76a}
+/* moon */
+.mw{width:min(62vw,250px)}
+.orb{position:relative;width:min(80vw,280px);aspect-ratio:1;animation:sp 16s linear infinite}.orb i{position:absolute;left:50%;top:0;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:#f6efd5;box-shadow:0 0 20px #fff}.orb i:after{content:"";position:absolute;bottom:4px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#e0524a}
+.earth{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8fd0ff,#2a6fd6 55%,#163d86)}
+.cur{width:120px;height:60px}
+/* planets */
+.lad{display:flex;align-items:flex-end;justify-content:center;gap:6px;--u:min(2.2vw,14px)}.lad div{display:flex;flex-direction:column;align-items:center;min-width:38px;font-size:.7rem;color:var(--mut)}.lad span{display:block;border-radius:50%;margin-bottom:4px;width:calc(var(--u)*var(--k));height:calc(var(--u)*var(--k));min-width:3px;min-height:3px;background:var(--c);box-shadow:0 0 14px var(--c);animation:fl 5s ease-in-out infinite}
+.pc{width:min(44vw,210px);padding:16px 10px;border-radius:24px;background:var(--card);border:1px solid rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.95rem;color:var(--mut)}.pc b{color:var(--gold);font-size:1.25rem}.pc u{display:block;width:64px;height:64px;border-radius:50%;background:var(--bg2);animation:sp 18s linear infinite;box-shadow:inset -10px -8px 18px rgba(0,0,0,.5),0 0 22px var(--g);position:relative}.pc u.sr:after{content:"";position:absolute;left:-30%;right:-30%;top:40%;height:20%;border:4px solid rgba(231,212,154,.7);border-radius:50%;transform:rotate(-15deg)}
+/* quiz */
+.q{background:var(--card);border-radius:22px;padding:20px;max-width:560px;width:100%;border:1px solid rgba(255,255,255,.14)}.q h3{margin:0 0 12px;color:#fff}.q .btn{margin:5px;font-size:1rem;padding:9px 20px}.q .btn.ok{background:var(--ok)}.q .btn.no{background:#ff6b6b;animation:sk .4s}@keyframes sk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fin{font-size:clamp(2rem,8vw,4.4rem);font-weight:800;color:var(--gold);text-shadow:0 0 30px rgba(223,176,91,.7)}
+.src{text-align:right;max-width:800px;width:100%;font-size:.92rem;color:var(--mut)}.src li{margin:6px 0}.src b{color:var(--gold)}
+.dots{position:fixed;right:8px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:9px}.dots a{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);display:block;transition:.3s}.dots a.on{background:var(--gold);transform:scale(1.5);box-shadow:0 0 10px var(--gold)}
+@media(max-width:700px){.dots{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+@property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+body:before,body:after{content:"";position:fixed;z-index:0;width:70vmax;height:70vmax;border-radius:50%;filter:blur(90px);opacity:.28;pointer-events:none;animation:dr 22s ease-in-out infinite alternate}
+body:before{background:radial-gradient(circle,#5b3cff,transparent 65%);top:-25vmax;right:-20vmax}
+body:after{background:radial-gradient(circle,#00b8a9,transparent 65%);bottom:-30vmax;left:-25vmax;animation-delay:-8s;opacity:.18}
+@keyframes dr{to{transform:translate(8vmax,6vmax) scale(1.2)}}
+.c2{position:relative;transition:transform .4s,box-shadow .4s;background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03))}
+.c2:before{content:"";position:absolute;inset:-2px;border-radius:30px;padding:2px;background:conic-gradient(from var(--a),transparent 0 62%,var(--gold),#7b5cff 85%,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rt 7s linear infinite;pointer-events:none}
+@keyframes rt{to{--a:360deg}}
+.c2:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(123,92,255,.25)}
+.orn{position:absolute;z-index:-1;width:min(90vw,620px);aspect-ratio:1;left:50%;top:50%;margin:calc(min(90vw,620px)/-2) 0 0 calc(min(90vw,620px)/-2);background:conic-gradient(from 0deg,rgba(223,176,91,.16),rgba(123,92,255,.12),rgba(223,176,91,.16));clip-path:polygon(50% 0,61% 20%,85% 15%,80% 39%,100% 50%,80% 61%,85% 85%,61% 80%,50% 100%,39% 80%,15% 85%,20% 61%,0 50%,20% 39%,15% 15%,39% 20%);animation:sp 70s linear infinite;pointer-events:none}
+section{overflow:hidden}
+.num{position:relative}.num:after{content:"";position:absolute;inset:-14px;border:2px dashed var(--gold);border-radius:50%;animation:sp 14s linear infinite;opacity:.7}
+h2{background:linear-gradient(120deg,#fff 30%,var(--gold),#fff 70%);background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 7s linear infinite}
+h2:before,h2:after{content:"✦";color:var(--gold);-webkit-text-fill-color:var(--gold);font-size:.5em;margin:0 .6em;vertical-align:middle;animation:pu2 2.4s infinite}
+@keyframes pu2{50%{opacity:.3;transform:scale(1.5)}}
+.rv:nth-child(even){transform:translateX(-50px) scale(.95)}.rv:nth-child(odd){transform:translateX(50px) scale(.95)}.rv.in{transform:none!important}
+.moonw{position:relative;display:grid;place-items:center}.moonw:before,.moonw:after{content:"";position:absolute;border:2px solid rgba(223,176,91,.35);border-radius:50%;animation:ex 4s ease-out infinite}.moonw:before{inset:-30%}.moonw:after{inset:-30%;animation-delay:-2s}
+@keyframes ex{from{transform:scale(.5);opacity:1}to{transform:scale(1.4);opacity:0}}
+.verse{position:relative;overflow:hidden}.verse:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);animation:gl 5s infinite}@keyframes gl{to{left:130%}}
+.btn{position:relative;overflow:hidden}.btn:hover{box-shadow:0 0 40px rgba(223,176,91,.8)}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:25;pointer-events:none}
+.lk{display:none;min-height:42vh;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:var(--mut)}.lk b{font-size:3.4rem;animation:bn 2s infinite}
+.stn.lock .lk{display:flex}.stn.lock>*:not(.lk):not(.orn){display:none!important}.stn.lock{min-height:46vh}
+.stn.opened{animation:op 1s}@keyframes op{from{filter:brightness(2)}}
+.nxt{margin-top:10px;animation:pu2 1.4s infinite}
+.sk{position:relative;width:min(92vw,440px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(123,92,255,.28),transparent 70%)}
+.sk .ln{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.sk .ln line{stroke:#ffd76a;stroke-width:.7;stroke-linecap:round;filter:drop-shadow(0 0 2px #ffd76a)}
+.sk button{position:absolute;transform:translate(-50%,-50%);width:clamp(42px,12vw,56px);height:clamp(42px,12vw,56px);border-radius:50%;border:2px solid rgba(255,255,255,.35);background:radial-gradient(circle,#2b2f6e,#10143a);color:#fff;font:inherit;font-weight:800;font-size:1.2rem;cursor:pointer;filter:none;transition:.35s;padding:0;display:grid;place-items:center;line-height:1}
+.sk button.nx{border-color:var(--gold);box-shadow:0 0 18px #ffd76a;animation:pu2 1s infinite}
+.sk button.on{background:radial-gradient(circle,#fff6b0,#ffb52e);color:#0b1230;border-color:#fff;box-shadow:0 0 26px #ffd76a;transform:translate(-50%,-50%) scale(1.15);text-shadow:none}
+.sk button.sh{animation:sk .4s}@keyframes sk{25%{transform:translate(calc(-50% - 6px),-50%)}75%{transform:translate(calc(-50% + 6px),-50%)}}
+.sk .hid{opacity:0;pointer-events:none}
+.sk.done:after{content:"";position:absolute;inset:-4%;border-radius:50%;border:2px solid var(--gold);animation:ex 3s ease-out infinite;pointer-events:none}
+.cnt{font-size:clamp(2.4rem,10vw,4.4rem);font-weight:800;color:var(--gold);text-shadow:0 0 30px rgba(223,176,91,.7)}
+.wl{position:relative;width:min(92vw,420px);height:820px;border-radius:30px;overflow:hidden;background:linear-gradient(#1b2a6b 0,#0d1540 14%,#05081c 38%,#000 66%,#031a2b 88%,#06384f 100%);border:2px solid rgba(223,176,91,.3)}
+.wl .s1{position:absolute;font-size:1.4rem;animation:pu2 3s infinite}
+.wl .rim{position:absolute;top:96px;left:50%;width:70%;height:40px;margin-left:-35%;border-radius:50%;border:7px solid #6b5230;background:#000}
+.wl .wall{position:absolute;left:15%;right:15%;top:116px;bottom:0;background:repeating-linear-gradient(#3b2c18 0 30px,#1a1209 30px 34px);opacity:.45;-webkit-mask:linear-gradient(#000,transparent 85%);mask:linear-gradient(#000,transparent 85%)}
+.wl .rope{position:absolute;left:50%;top:116px;width:5px;height:480px;margin-left:-2px;background:repeating-linear-gradient(#c9a05a 0 7px,#7a5a2a 7px 14px);transform-origin:top;animation:swg 4s ease-in-out infinite;opacity:.7}@keyframes swg{50%{transform:rotate(1.5deg)}}
+.wl .tx{position:absolute;left:8%;right:8%;text-align:center;font-size:1.08rem;color:#fff;line-height:1.7;text-shadow:0 2px 8px #000}.wl .tx b{color:var(--gold)}
+.wl .water{position:absolute;left:0;right:0;bottom:0;height:190px;background:linear-gradient(rgba(10,110,160,.55),rgba(6,56,79,.95))}.wl .water:before,.wl .water:after{content:"";position:absolute;left:50%;top:50px;width:120px;height:30px;margin-left:-60px;border:2px solid rgba(180,230,255,.5);border-radius:50%;animation:ex 3.5s ease-out infinite}.wl .water:after{animation-delay:-1.7s}
+.wl .rock{position:absolute;left:50%;bottom:130px;width:110px;height:54px;margin-left:-55px;border-radius:50% 50% 20% 20%;background:radial-gradient(circle at 40% 30%,#8a8a96,#2b2b34);box-shadow:0 0 50px 14px rgba(255,215,106,.35);animation:pu 4s infinite}
+.cps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:min(92vw,420px)}.cp{display:flex;gap:2px;justify-content:center;opacity:.12;transform:scale(.6);transition:.5s}.cp.on2{opacity:1;transform:none}.cp i{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2b3,#d9a02c 60%,#8a5d0d);box-shadow:0 0 10px rgba(255,200,60,.5)}
+.cell{position:relative;width:min(92vw,420px);height:230px;border-radius:24px;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(255,215,106,var(--lt,.05)),#070a18 70%);border:2px solid #444;transition:.8s}
+.cell .bars{position:absolute;inset:0;display:flex;justify-content:space-around;z-index:2}.cell .b1{width:15%;height:100%;background:linear-gradient(90deg,#3a3d4a,#9aa0b8,#3a3d4a);border-radius:8px;cursor:pointer;transition:transform .9s,opacity .9s;display:grid;place-items:center;font-size:1.5rem;color:#fff;font-weight:800;border:0;font-family:inherit}.cell .b1.op{transform:translateY(-110%);opacity:.12;pointer-events:none}
+.cell .in{position:absolute;inset:0;display:grid;place-items:center;font-size:3.4rem;filter:drop-shadow(0 0 20px rgba(255,215,106,var(--lt,.1)))}
+.pcd{background:var(--card);border:1px solid var(--gold);border-radius:18px;padding:12px 16px;width:100%;text-align:right;animation:inn .7s}@keyframes inn{from{opacity:0;transform:translateY(16px)}}
+.rs{position:relative;width:min(92vw,440px);height:270px;border-radius:24px;overflow:hidden;background:linear-gradient(#4f78b5,#a9c4e8);transition:background 1.5s}.rs.dry{background:linear-gradient(#c8a35e,#f2dca4)}
+.rs .cl{position:absolute;top:6px;left:50%;font-size:4.2rem;transform:translateX(-50%);transition:transform 1.6s,filter 1.5s,opacity 1.5s}.rs.dry .cl{filter:grayscale(1) brightness(1.5);opacity:.35;transform:translateX(250%)}
+.rs .dr{position:absolute;left:0;right:0;top:78px;height:130px;pointer-events:none;transition:opacity 1s}.rs.dry .dr{opacity:0}.dr i{position:absolute;top:0;width:3px;height:16px;background:#7fd3ff;border-radius:2px;animation:fall 1s linear infinite}@keyframes fall{to{transform:translateY(120px);opacity:0}}
+.rs .fld{position:absolute;left:0;right:0;bottom:0;height:64px;background:#3f7d32;transition:background 1.5s;display:flex;justify-content:space-around;align-items:flex-start;font-size:1.5rem}.rs .fld span{transition:opacity 1.5s,filter 1.5s}.rs.dry{}.rs.dry .fld{background:repeating-linear-gradient(80deg,#8a6a3a 0 30px,#5e4522 30px 33px)}.rs.dry .fld span{opacity:.15;filter:grayscale(1)}
+.ch{display:flex;gap:4px;align-items:flex-end;height:90px;width:min(92vw,440px)}.ch i{flex:1;background:#4fa3ff;border-radius:4px 4px 0 0;transition:height .6s;opacity:.2}.ch i.on{opacity:1}.ch i.lean{background:#b8873a}
+.stp{display:none;width:100%}.stp.on{display:block;animation:inn .8s}
+.ring{position:relative;width:min(72vw,280px);aspect-ratio:1;margin:10px auto}.ring i{position:absolute;font-style:normal;font-size:1.5rem;left:50%;top:50%;transition:transform 2s cubic-bezier(.3,1.2,.5,1)}
+.src a,.sr a{color:var(--gold);word-break:break-all}.src li{margin:8px 0}
+.sr{margin-top:6px}
+
+.sk button.nm{border:0;background:transparent;width:auto;height:auto;font-size:clamp(1.6rem,6vw,2.2rem);filter:grayscale(1) brightness(.55);animation:pu2 3s infinite}
+.sk button.nm.on{filter:none;background:transparent;box-shadow:none;transform:translate(-50%,-50%) scale(1.4);text-shadow:0 0 18px #ffd76a;animation:none}
+.cfd{position:relative;width:min(92vw,420px);height:260px;border-radius:24px;background:radial-gradient(circle at 50% 40%,#2a2150,#0b0f2c);border:2px solid rgba(223,176,91,.35);overflow:hidden}
+.dh{position:absolute;width:44px;height:44px;border-radius:50%;border:0;font:800 1.2rem Tajawal;color:#6b4300;cursor:pointer;background:radial-gradient(circle at 35% 30%,#fff2b3,#d9a02c 60%,#8a5d0d);box-shadow:0 0 14px rgba(255,200,60,.7);animation:fl 3s ease-in-out infinite;transition:transform .35s,opacity .35s}
+.dh.got{transform:scale(2.2);opacity:0;pointer-events:none}
+.tmw{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.tmt{direction:ltr;position:relative;width:min(92vw,420px);height:36px;border-radius:99px;background:rgba(255,255,255,.1);border:2px solid var(--gold);overflow:hidden}
+.tmt.sh{animation:sk .4s}
+.tmt .zn{position:absolute;top:0;bottom:0;background:rgba(61,220,151,.55);border-radius:99px}
+.tmt .mk{position:absolute;top:2px;bottom:2px;width:8px;margin-left:-4px;border-radius:4px;background:#fff;box-shadow:0 0 10px #fff}
+
+.dh.fall{top:-50px;animation:dfall 3s linear forwards}@keyframes dfall{to{top:calc(100% + 10px)}}
+.dh.fall.got{animation-play-state:paused}
+.bar.full{box-shadow:0 0 30px var(--gold)}
+
+.aft{display:none;width:100%;flex-direction:column;align-items:center;gap:14px}
+.aft.aft-in{display:flex!important;animation:inn .9s}
+
+.gr{position:relative;width:min(70vw,260px);height:150px;border:3px solid #8a6a3a;border-radius:14px 14px 8px 8px;background:rgba(0,0,0,.35);overflow:hidden;display:flex;align-items:flex-end}
+.gf{width:100%;height:0;background:repeating-linear-gradient(45deg,#f6c453 0 10px,#e0a93a 10px 20px);transition:height 1s;box-shadow:0 -6px 16px rgba(246,196,83,.6)}
+.gl{position:absolute;top:6px;right:10px;font-weight:800;color:#fff;text-shadow:0 1px 4px #000}
+.btn.o.no{background:#ff6b6b;color:#fff;border-color:#ff6b6b}
+
+.mo{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center}.mo canvas{max-width:92vw;height:auto;background:rgba(0,0,0,.25);border-radius:18px;border:1px solid rgba(255,255,255,.15)}
+
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas><canvas id="fx"></canvas><div id="bar"></div><div id="score">⭐ <span id="sc">٠</span></div><div id="toast"></div><nav class="dots" id="dots"></nav>
+<section id="s0">
+<div class="moonw"><svg class="moon" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#f6d58b"/><stop offset="1" stop-color="#c98f2e"/></linearGradient></defs><path d="M250 30A180 180 0 1 0 250 370A175 175 0 0 1 250 30Z" fill="url(#g)"/></svg></div>
+<h1>رحلة بين الرؤى<br>والنجوم</h1>
+<p>ثماني محطات: رؤيا يوسف عليه السلام، ثم سرّ الشمس، ثم بقية القصة حتى نهايتها. <b style="color:#fff">لا تنتقل إلى المحطة التالية حتى تُكمل أنشطة السابقة!</b></p>
+<p style="color:var(--gold)">⭐ في كل نشاط نجمة… اجمع أكبر عدد منها!</p>
+<a href="#s1"><button class="btn">ابدأ الرحلة ✨</button></a><div class="hint">⌄</div>
+</section>
+<section class="stn" id="s1" data-n="1">
+<div class="st rv"><div class="lab">المحطة</div><div class="num">1</div></div>
+<h2 class="rv">سؤال الحلم</h2>
+<p class="rv" style="color:#fff;font-size:clamp(1.3rem,5vw,2.2rem)">تخيّلوا أنكم نمتم ورأيتم في المنام شيئًا غريبًا جدًا…</p>
+<h3 class="rv" style="font-size:clamp(1.6rem,6vw,2.8rem)">هل تتوقعون أن يكون للحلم معنى؟</h3>
+<div class="row rv"><button class="btn" onclick="rev()">نعم، أتوقع</button><button class="btn o" onclick="rev()">لا أظن</button></div>
+<p class="msg" id="ans"></p><div class="verse" style="font-size:1.5rem">﴿نَحْنُ نَقُصُّ عَلَيْكَ أَحْسَنَ الْقَصَصِ﴾<small>[يوسف: ٣]</small></div><p class="rv">قال النبي ﷺ: «الكريم ابن الكريم ابن الكريم ابن الكريم: يوسف بن يعقوب بن إسحاق بن إبراهيم» (رواه البخاري، كما في تفسير ابن كثير).</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٦: نسب يوسف: «الكريم ابن الكريم…» (البخاري) — <a href="https://app.turath.io/book/23604?page=1803" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٧: تأويل الكواكب بالإخوة والشمس والقمر بالأبوين، «رؤيا الأنبياء وحي»، وبين الرؤيا وتأويلها أربعون سنة — <a href="https://app.turath.io/book/23604?page=1804" target="_blank" rel="noopener">افتح في تراث</a></details>
+</section>
+<section class="stn lock" id="s2" data-n="2">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 1 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">2</div></div>
+<h2 class="rv">حلم يوسف عليه السلام</h2>
+<div class="c2 rv"><span class="tag">اكتشف الرؤيا بنفسك!</span>
+<p>رأى يوسف في منامه <b style="color:#fff">كواكب</b> والشمس والقمر. في السماء أدناه نجوم مخبّأة: <b style="color:#fff">اضغط كل نجمة لتُضيئها وتعدّها</b>، ثم أخبرنا: كم كوكبًا رأى يوسف؟</p>
+<div class="cnt" id="cntA">٠</div>
+<div class="sk" id="skA"><svg class="ln" viewBox="0 0 100 100" id="lnA"></svg></div>
+<div class="msg" id="mA">اضغط النجوم لتعدّها ✨</div>
+<div class="row" id="askA" style="display:none"></div>
+<div id="vA" style="display:none;width:100%"><div class="verse" style="font-size:1.45rem">﴿إِنِّي رَأَيْتُ أَحَدَ عَشَرَ كَوْكَبًا وَالشَّمْسَ وَالْقَمَرَ رَأَيْتُهُمْ لِي سَاجِدِينَ﴾<small>[يوسف: ٤]</small></div>
+<p id="tA" style="display:none;color:#fff">قال ابن عباس: «رؤيا الأنبياء وحي». وقال المفسرون: الأحد عشر كوكبًا هم إخوته، والشمس والقمر أبواه.</p></div><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٧: تأويل الكواكب بالإخوة والشمس والقمر بالأبوين، «رؤيا الأنبياء وحي»، وبين الرؤيا وتأويلها أربعون سنة — <a href="https://app.turath.io/book/23604?page=1804" target="_blank" rel="noopener">افتح في تراث</a></details></div><div class="c2 rv"><span class="tag">نصيحة يعقوب</span>
+<p>خاف يعقوب عليه السلام أن يحكي يوسف رؤياه لإخوته فيحسدوه، فقال:</p><div class="verse" style="font-size:1.45rem">﴿يَا بُنَيَّ لَا تَقْصُصْ رُؤْيَاكَ عَلَىٰ إِخْوَتِكَ فَيَكِيدُوا لَكَ كَيْدًا﴾<small>[يوسف: ٥]</small></div><p>وأخبره أن الله سيصطفيه: ﴿وَكَذَٰلِكَ يَجْتَبِيكَ رَبُّكَ﴾ [يوسف: ٦]، أي يختارك لنبوته. ويؤخذ من الآية <b style="color:#fff">كتمان النعمة حتى تظهر</b>.</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٨: نصيحة يعقوب، واجتباء يوسف، وكتمان النعمة — <a href="https://app.turath.io/book/23604?page=1805" target="_blank" rel="noopener">افتح في تراث</a></details></div>
+</section>
+<section class="stn lock" id="s3" data-n="3">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 2 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">3</div></div>
+<h2 class="rv">الشمس المضيئة ☀️</h2>
+<p class="rv">الشمس تمنح الأرض الضوء والدفء. قال ابن كثير في ﴿سِرَاجًا وَهَّاجًا﴾: «الشمس المنيرة على جميع العالم التي يتوهج ضوؤها لأهل الأرض كلهم».</p><div class="verse" style="font-size:1.5rem">﴿وَجَعَلْنَا سِرَاجًا وَهَّاجًا﴾<small>[النبأ: ١٣]</small></div><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٨ ص٣٠٧: سراجًا وهاجًا — <a href="https://app.turath.io/book/23604?page=3754" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٢١٧: ضياء الشمس ونور القمر، «فبالشمس تعرف الأيام وبسير القمر تعرف الشهور والأعوام» — <a href="https://app.turath.io/book/23604?page=1704" target="_blank" rel="noopener">افتح في تراث</a></details><div class="c2 rv"><span class="tag">لماذا يصير الضوء أصفر وبرتقاليًا عند الغروب؟</span>
+<p>ضوء الشمس يحمل كل ألوان قوس المطر. الهواء <b style="color:#fff">يبعثر اللون الأزرق</b> أكثر من الأحمر بنحو ١٠ أضعاف، فنرى السماء زرقاء. وعند الغروب يقطع الضوء <b style="color:#fff">طريقًا أطول</b> في الهواء، فيضيع الأزرق والأخضر في الطريق ويصل إلينا الأصفر والبرتقالي والأحمر. اسحب الشمس نحو الأفق!</p>
+<div class="hz" id="hz"><i id="hsun"></i></div><input type="range" id="hr" min="0" max="100" value="90">
+<div class="age" style="font-size:1rem">الألوان التي تصل إلى عينك:</div>
+<div class="spec" id="spec"><i style="--c:#8b5cff"></i><i style="--c:#2f6bff"></i><i style="--c:#2fd36b"></i><i style="--c:#ffe24a"></i><i style="--c:#ff9a2e"></i><i style="--c:#ff3b2e"></i></div>
+<div class="msg" id="mH"></div>
+<details class="sr"><summary>🔬 المصدر العلمي</summary>• NOAA: <a href="https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/why-the-sky-blue" target="_blank" rel="noopener">Why is the sky blue?</a><br>• Scientific American: <a href="https://www.scientificamerican.com/article/why-is-the-sky-blue" target="_blank" rel="noopener">Why is the sky blue?</a> (الأزرق يُبعثَر أكثر من الأحمر بنحو ١٠ أضعاف)</details></div>
+<div class="c2 rv"><span class="tag">لماذا يضيء القمر؟</span>
+<p>القمر ليس مصباحًا! هو كرة صخرية <b style="color:#fff">لا تضيء بنفسها</b>، لكنه يعكس ضوء الشمس مثل المرآة. <b style="color:#fff">أطفئ الشمس</b> وشاهد ماذا يحدث للقمر، ثم <b style="color:#fff">حرّك القمر حول الأرض</b> لترى كيف يتغير الجزء المضيء الذي نراه.</p>
+<div class="row"><button class="btn" id="sunb">☀️ الشمس مضيئة (اضغط لإطفائها)</button></div>
+<div class="mo"><canvas id="mtop" width="300" height="300"></canvas><canvas id="mview" width="200" height="200"></canvas></div>
+<div class="age" style="font-size:.95rem">يسار: نظرة من الأعلى (الشمس إلى اليسار) — يمين: ما نراه من الأرض</div>
+<input type="range" id="mr" min="0" max="100" value="50">
+<div class="msg" id="mM">حرّك المنزلق لتحرّك القمر حول الأرض</div>
+<p style="font-size:1rem">قال ابن كثير: جعل الله الشعاع الصادر عن جرم الشمس «ضياءً» وشعاع القمر «نورًا»، «ففاوت بينهما لئلا يشتبها»، و«قدّر القمر منازل».</p><div class="verse" style="font-size:1.35rem">﴿هُوَ الَّذِي جَعَلَ الشَّمْسَ ضِيَاءً وَالْقَمَرَ نُورًا وَقَدَّرَهُ مَنَازِلَ﴾<small>[يونس: ٥]</small></div><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٢١٧: ضياء الشمس ونور القمر، «فبالشمس تعرف الأيام وبسير القمر تعرف الشهور والأعوام» — <a href="https://app.turath.io/book/23604?page=1704" target="_blank" rel="noopener">افتح في تراث</a></details>
+<details class="sr"><summary>🔬 المصدر العلمي</summary>• NASA Space Place، «All About the Moon»: <a href="https://spaceplace.nasa.gov/all-about-the-moon/" target="_blank" rel="noopener">spaceplace.nasa.gov/all-about-the-moon</a> (القمر لا يضيء بنفسه، وإنما يعكس ضوء الشمس)<br>• NASA Space Place، «What Are the Moon's Phases?»: <a href="https://spaceplace.nasa.gov/moon-phases/" target="_blank" rel="noopener">spaceplace.nasa.gov/moon-phases</a></details></div>
+</section>
+<section class="stn lock" id="s4" data-n="4">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 3 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">4</div></div>
+<h2 class="rv">في غيابة الجب</h2>
+<p class="rv">لم يكن لإخوة يوسف سبيل إلى قتله، لأن الله يريد له النبوة والتمكين. انزل معه إلى قاع البئر…</p>
+<div class="wl rv">
+<i class="s1" style="top:20px;left:18%">⭐</i><i class="s1" style="top:44px;right:20%;animation-delay:-1s">✨</i><i class="s1" style="top:14px;left:58%;font-size:2.2rem">🌙</i>
+<div class="rim"></div><div class="wall"></div><div class="rope"></div>
+<div class="tx" style="top:170px">ألقوه في <b>غيابة الجب</b>، أي في <b>أسفل البئر</b>.<br><small style="color:var(--mut)">قال قتادة: هي بئر بيت المقدس</small></div>
+<div class="tx" style="top:340px">رُبط بحبل ودُلّي في البئر، ثم انقطع الحبل فسقط في الماء، فصعد إلى <b>صخرة</b> في وسطه تُسمّى <b>«الراغوفة»</b>.</div>
+<div class="tx" style="top:500px">في ذلك الظلام أوحى الله إليه:<br><b>«لا تحزن، فإن لك من ذلك فرجًا ومخرجًا حسنًا»</b></div>
+<div class="rock"></div><div class="water"></div></div><div class="verse" style="font-size:1.5rem">﴿وَأَوْحَيْنَا إِلَيْهِ لَتُنَبِّئَنَّهُمْ بِأَمْرِهِمْ هَٰذَا وَهُمْ لَا يَشْعُرُونَ﴾<small>[يوسف: ١٥]</small></div><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٩: غيابة الجب أسفله، وقال قتادة: بئر بيت المقدس — <a href="https://app.turath.io/book/23604?page=1806" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٢٠: الحبل والصخرة (الراغوفة) في البئر — <a href="https://app.turath.io/book/23604?page=1807" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٢١: الوحي إلى يوسف تثبيتًا لقلبه: «لك من ذلك فرجًا ومخرجًا» — <a href="https://app.turath.io/book/23604?page=1808" target="_blank" rel="noopener">افتح في تراث</a></details><div class="c2 rv"><span class="tag">ثمن بخس</span>
+<p>ثم باعه إخوته بثمن قليل: ﴿دَرَاهِمَ مَعْدُودَةٍ﴾. فكان ثمنه قليلًا زهيدًا. <b style="color:#fff">اصطد الدراهم الذهبية التي تتساقط بالضغط عليها</b> حتى يمتلئ الصندوق!</p>
+<div class="cfd" id="cfd"></div><div class="bar" id="cbox"><i id="cbar"></i></div><div class="msg" id="mC">اضغط الدراهم قبل أن تسقط!</div><div class="aft" id="aC"><div class="verse" style="font-size:1.4rem">﴿وَشَرَوْهُ بِثَمَنٍ بَخْسٍ دَرَاهِمَ مَعْدُودَةٍ وَكَانُوا فِيهِ مِنَ الزَّاهِدِينَ﴾<small>[يوسف: ٢٠]</small></div><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٢٣: معنى الثمن البخس: ثمن قليل زهيد — <a href="https://app.turath.io/book/23604?page=1810" target="_blank" rel="noopener">افتح في تراث</a></details></div></div>
+</section>
+<section class="stn lock" id="s5" data-n="5">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 4 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">5</div></div>
+<h2 class="rv">يوسف في السجن</h2>
+<p class="rv">اختار يوسف السجن على أن يعصي الله. افتح القضبان الثلاثة بلعبة سريعة: أوقف المؤشر داخل المنطقة الخضراء!</p>
+<div class="cell rv" id="cell"><div class="in">🌙</div><div class="bars" id="bars"></div></div>
+<div class="tmw rv"><div class="tmt" id="tmt"><i class="zn" id="zn"></i><i class="mk" id="mk"></i></div><button class="btn" id="tbtn">🔑 افتح القضيب!</button></div><div class="msg" id="mP">اضغط الزر لحظة يمرّ المؤشر على المنطقة الخضراء</div><div id="pcards" style="width:min(92vw,520px);display:flex;flex-direction:column;gap:10px"></div><div class="aft" id="aP"><div class="verse" style="font-size:1.4rem">﴿قَالَ رَبِّ السِّجْنُ أَحَبُّ إِلَيَّ مِمَّا يَدْعُونَنِي إِلَيْهِ﴾<small>[يوسف: ٣٣]</small></div><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣١: اختيار السجن على المعصية — <a href="https://app.turath.io/book/23604?page=1818" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٢: الفتيان في السجن، وأخلاق يوسف فيه — <a href="https://app.turath.io/book/23604?page=1819" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٥: بضع سنين: من ثلاث إلى تسع — <a href="https://app.turath.io/book/23604?page=1822" target="_blank" rel="noopener">افتح في تراث</a></details></div>
+</section>
+<section class="stn lock" id="s6" data-n="6">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 5 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">6</div></div>
+<h2 class="rv">خزائن الأرض</h2>
+<div class="c2 rv"><p>رأى الملك رؤيا عجيبة ولم يعرف أحد تأويلها، فتذكّر الذي نجا من السجن يوسف، فأرسلوه إليه، فعبّرها من غير أن يشترط الخروج أولًا. قال: ﴿اجْعَلْنِي عَلَىٰ خَزَائِنِ الْأَرْضِ ۖ إِنِّي حَفِيظٌ عَلِيمٌ﴾ [يوسف: ٥٥]</p>
+<p style="color:#fff"><b>كن أنت أمين المخزن!</b> أجب عن ثلاثة أسئلة سريعة باختيار الصواب، وكل إجابة صحيحة تملأ المخزن بالحبوب.</p>
+<div class="gr" id="gr"><div class="gf" id="gf"></div><span class="gl">🏚️ المخزن</span></div>
+<div class="msg" id="gq" style="font-size:1.25rem"></div><div class="row" id="gopt"></div><div class="msg" id="mE"></div>
+<div class="aft" id="aG"><div class="verse" style="font-size:1.4rem">﴿تَزْرَعُونَ سَبْعَ سِنِينَ دَأَبًا فَمَا حَصَدتُّمْ فَذَرُوهُ فِي سُنبُلِهِ إِلَّا قَلِيلًا مِّمَّا تَأْكُلُونَ﴾<small>[يوسف: ٤٧]</small></div><p style="font-size:1rem">قال ابن كثير: ادّخروه في سنبله «ليكون أبقى له وأبعد عن إسراع الفساد إليه»، وليكن الأكل قليلًا لا إسراف فيه.</p><div class="verse" style="font-size:1.35rem">﴿ثُمَّ يَأْتِي مِن بَعْدِ ذَٰلِكَ سَبْعٌ شِدَادٌ يَأْكُلْنَ مَا قَدَّمْتُمْ لَهُنَّ إِلَّا قَلِيلًا مِّمَّا تُحْصِنُونَ﴾<small>[يوسف: ٤٨]</small></div><p style="font-size:1rem">قال ابن كثير: السبع الشداد هي «السبع السنين المحل» التي تعقب الخصب، «لأن سني الجدب يؤكل فيها ما جمعوه في سني الخصب». ثم بشّرهم: ﴿ثُمَّ يَأْتِي مِن بَعْدِ ذَٰلِكَ عَامٌ فِيهِ يُغَاثُ النَّاسُ﴾ [يوسف: ٤٩]، أي يأتيهم الغيث وهو المطر.</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٦: تأويل رؤيا الملك: الخصب، والادخار في السنبل، والسنون المحل، وعام يغاث الناس — <a href="https://app.turath.io/book/23604?page=1823" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٥: بضع سنين: من ثلاث إلى تسع — <a href="https://app.turath.io/book/23604?page=1822" target="_blank" rel="noopener">افتح في تراث</a></details></div></div>
+</section>
+<section class="stn lock" id="s7" data-n="7">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 6 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">7</div></div>
+<h2 class="rv">نهاية القصة</h2>
+<div class="c2 rv" id="endc"><p>اضغط «التالي» لتعرف نهاية القصة خطوة بخطوة.</p><div class="stp on" id="stp0"><span class="tag">١ — يتعرّف على إخوته</span><p style="color:#fff;margin-top:10px">كان إخوته يترددون عليه سنتين وأكثر وهم لا يعرفونه، وهو يعرفهم ويكتم نفسه. وفي مصر زال عنهم الجهد والقحط بفضل الله.</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٠: تعرّف يوسف على إخوته: لا تثريب عليكم — <a href="https://app.turath.io/book/23604?page=1837" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٢: الأمان من الجهد والقحط في مصر — <a href="https://app.turath.io/book/23604?page=1839" target="_blank" rel="noopener">افتح في تراث</a></details></div><div class="stp" id="stp1"><span class="tag">٢ — «أنا يوسف»</span><p style="color:#fff;margin-top:10px">فلما اشتد الأمر فرّج الله، فقالوا متعجبين:<div class="verse" style="font-size:1.3rem">﴿قَالُوا أَإِنَّكَ لَأَنتَ يُوسُفُ ۖ قَالَ أَنَا يُوسُفُ وَهَٰذَا أَخِي ۖ قَدْ مَنَّ اللَّهُ عَلَيْنَا﴾<small>[يوسف: ٩٠]</small></div>قال ابن كثير: «إنه من يتق ويصبر فإن الله لا يضيع أجر المحسنين».</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٠: تعرّف يوسف على إخوته: لا تثريب عليكم — <a href="https://app.turath.io/book/23604?page=1837" target="_blank" rel="noopener">افتح في تراث</a></details></div><div class="stp" id="stp2"><span class="tag">٣ — العفو</span><p style="color:#fff;margin-top:10px">اعترفوا بخطئهم، فعفا عنهم يوسف:<div class="verse" style="font-size:1.3rem">﴿قَالَ لَا تَثْرِيبَ عَلَيْكُمُ الْيَوْمَ ۖ يَغْفِرُ اللَّهُ لَكُمْ وَهُوَ أَرْحَمُ الرَّاحِمِينَ﴾<small>[يوسف: ٩٢]</small></div>أي لا لوم عليكم اليوم، ولا أذكر لكم ذنبكم بعد اليوم.</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٠: تعرّف يوسف على إخوته: لا تثريب عليكم — <a href="https://app.turath.io/book/23604?page=1837" target="_blank" rel="noopener">افتح في تراث</a></details></div><div class="stp" id="stp3"><span class="tag">٤ — القميص وعودة البصر</span><p style="color:#fff;margin-top:10px">أرسل يوسف قميصه وقال:<div class="verse" style="font-size:1.3rem">﴿اذْهَبُوا بِقَمِيصِي هَٰذَا فَأَلْقُوهُ عَلَىٰ وَجْهِ أَبِي يَأْتِ بَصِيرًا﴾<small>[يوسف: ٩٣]</small></div>فلما ألقاه البشير على وجه يعقوب ارتدّ بصيرًا، وقال لهم: ﴿أَلَمْ أَقُلْ لَكُمْ إِنِّي أَعْلَمُ مِنَ اللَّهِ مَا لَا تَعْلَمُونَ﴾ [يوسف: ٩٦].</p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥١: القميص وارتداد بصر يعقوب — <a href="https://app.turath.io/book/23604?page=1838" target="_blank" rel="noopener">افتح في تراث</a></details></div><div class="stp" id="stp4"><span class="tag">٥ — تحقّقت الرؤيا!</span><p style="color:#fff;margin-top:10px">جاء الأبوان والإخوة إلى مصر، ورفع يوسف أبويه على العرش، وخرّوا له سُجّدًا، فقال:<div class="verse" style="font-size:1.3rem">﴿يَا أَبَتِ هَٰذَا تَأْوِيلُ رُؤْيَايَ مِن قَبْلُ قَدْ جَعَلَهَا رَبِّي حَقًّا﴾<small>[يوسف: ١٠٠]</small></div>قال ابن كثير: كان بين رؤيا يوسف وتأويلها <b style="color:#fff">أربعون سنة</b>. وكان سجود التحية جائزًا في شرائعهم، ثم <b style="color:#fff">حُرّم في شريعتنا</b>، فالسجود لا يكون إلا لله وحده.<div class="ring" id="ringE"></div><p style="color:var(--gold)">«الحمد لله الذي أتمّ نعمته»… نهاية القصة ✨</p></p><details class="sr"><summary>📖 المصدر من تراث</summary>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٢: الأمان من الجهد والقحط في مصر — <a href="https://app.turath.io/book/23604?page=1839" target="_blank" rel="noopener">افتح في تراث</a><br>• تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٣: سجود التحية، وأربعون سنة بين الرؤيا وتأويلها — <a href="https://app.turath.io/book/23604?page=1840" target="_blank" rel="noopener">افتح في تراث</a></details></div><button class="btn" id="enb">التالي ⬇</button></div>
+</section>
+<section class="stn lock" id="s8" data-n="8">
+<div class="lk"><b>🔒</b><p>أكمل المحطة 7 أولًا لتُفتح هذه المحطة</p></div><div class="st rv"><div class="lab">المحطة</div><div class="num">8</div></div>
+<h2 class="rv">اختبر معلوماتك ✨</h2>
+<div class="q rv" id="quiz"></div><div class="fin rv" style="margin-top:20px">سبحان من خلق هذا الكون العظيم</div><div class="verse" style="font-size:1.5rem">﴿رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ﴾<small>[آل عمران: ١٩١]</small></div>
+</section>
+<section id="srcs"><h2 class="rv">📚 المصادر</h2>
+<details class="src rv" open><summary>المعلومات الدينية (من تراث)</summary><ul><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٢١٧:</b> ضياء الشمس ونور القمر، «فبالشمس تعرف الأيام وبسير القمر تعرف الشهور والأعوام» — <a href="https://app.turath.io/book/23604?page=1704" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1704</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٦:</b> نسب يوسف: «الكريم ابن الكريم…» (البخاري) — <a href="https://app.turath.io/book/23604?page=1803" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1803</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٧:</b> تأويل الكواكب بالإخوة والشمس والقمر بالأبوين، «رؤيا الأنبياء وحي»، وبين الرؤيا وتأويلها أربعون سنة — <a href="https://app.turath.io/book/23604?page=1804" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1804</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٨:</b> نصيحة يعقوب، واجتباء يوسف، وكتمان النعمة — <a href="https://app.turath.io/book/23604?page=1805" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1805</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣١٩:</b> غيابة الجب أسفله، وقال قتادة: بئر بيت المقدس — <a href="https://app.turath.io/book/23604?page=1806" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1806</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٢٠:</b> الحبل والصخرة (الراغوفة) في البئر — <a href="https://app.turath.io/book/23604?page=1807" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1807</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٢١:</b> الوحي إلى يوسف تثبيتًا لقلبه: «لك من ذلك فرجًا ومخرجًا» — <a href="https://app.turath.io/book/23604?page=1808" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1808</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٢٣:</b> معنى الثمن البخس: ثمن قليل زهيد — <a href="https://app.turath.io/book/23604?page=1810" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1810</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣١:</b> اختيار السجن على المعصية — <a href="https://app.turath.io/book/23604?page=1818" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1818</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٢:</b> الفتيان في السجن، وأخلاق يوسف فيه — <a href="https://app.turath.io/book/23604?page=1819" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1819</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٥:</b> بضع سنين: من ثلاث إلى تسع — <a href="https://app.turath.io/book/23604?page=1822" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1822</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٣٦:</b> تأويل رؤيا الملك: الخصب، والادخار في السنبل، والسنون المحل، وعام يغاث الناس — <a href="https://app.turath.io/book/23604?page=1823" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1823</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٠:</b> تعرّف يوسف على إخوته: لا تثريب عليكم — <a href="https://app.turath.io/book/23604?page=1837" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1837</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥١:</b> القميص وارتداد بصر يعقوب — <a href="https://app.turath.io/book/23604?page=1838" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1838</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٢:</b> الأمان من الجهد والقحط في مصر — <a href="https://app.turath.io/book/23604?page=1839" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1839</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٤ ص٣٥٣:</b> سجود التحية، وأربعون سنة بين الرؤيا وتأويلها — <a href="https://app.turath.io/book/23604?page=1840" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=1840</a></li><li><b>تفسير ابن كثير (ط. العلمية) ج٨ ص٣٠٧:</b> سراجًا وهاجًا — <a href="https://app.turath.io/book/23604?page=3754" target="_blank" rel="noopener">https://app.turath.io/book/23604?page=3754</a></li></ul><p>كل رابط يفتح الصفحة نفسها في مكتبة «تراث». والآيات الكريمة من القرآن الكريم.</p></details>
+<details class="src rv" open><summary>المعلومات العلمية (من مواقع موثوقة)</summary><ul>
+<li>NOAA، «Why is the sky blue?»: <a href="https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/why-the-sky-blue" target="_blank" rel="noopener">nesdis.noaa.gov/about/k-12-education/atmosphere/why-the-sky-blue</a></li>
+<li>Scientific American، «Why is the sky blue?»: <a href="https://www.scientificamerican.com/article/why-is-the-sky-blue" target="_blank" rel="noopener">scientificamerican.com/article/why-is-the-sky-blue</a></li>
+<li>NASA Space Place، «All About the Moon»: <a href="https://spaceplace.nasa.gov/all-about-the-moon/" target="_blank" rel="noopener">spaceplace.nasa.gov/all-about-the-moon</a></li>
+<li>NASA Space Place، «What Are the Moon's Phases?»: <a href="https://spaceplace.nasa.gov/moon-phases/" target="_blank" rel="noopener">spaceplace.nasa.gov/moon-phases</a></li>
+<p>مشاهد المحاكاة (الغروب، المطر والمخزن) رسوم توضيحية مبسّطة.</p></details></section>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let SC=0;const got={};
+function award(id,msg){if(got[id])return;got[id]=1;SC++;$('#sc').textContent=ar(SC);const s=$('#score');s.classList.remove('bump');void s.offsetWidth;s.classList.add('bump');const t=$('#toast');t.textContent='⭐ +١ '+(msg||'أحسنت!');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800);burst(innerWidth/2,90,40)}
+/* sky */
+const cv=$('#sky'),cx=cv.getContext('2d');let W,H,S=[],sh=[],sy=0;
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;S=Array.from({length:Math.min(170,W/6)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.3,p:Math.random()*6,z:Math.random()*.6+.1}))}
+rs();addEventListener('resize',rs);
+(function f(t){cx.clearRect(0,0,W,H);const g=cx.createRadialGradient(W*.8,H*.2,0,W*.8,H*.2,W);g.addColorStop(0,'rgba(90,60,200,.22)');g.addColorStop(1,'transparent');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+S.forEach(s=>{const y=((s.y-sy*s.z)%H+H)%H;cx.globalAlpha=.4+.6*Math.abs(Math.sin(t/900+s.p));cx.fillStyle='#fff';cx.beginPath();cx.arc(s.x,y,s.r,0,7);cx.fill()});
+if(Math.random()<.008)sh.push({x:Math.random()*W,y:Math.random()*H*.5,l:0});
+sh=sh.filter(s=>s.l<40);sh.forEach(s=>{s.l++;s.x-=14;s.y+=7;cx.globalAlpha=1-s.l/40;cx.strokeStyle='#ffe9a8';cx.lineWidth=2;cx.beginPath();cx.moveTo(s.x,s.y);cx.lineTo(s.x+60,s.y-30);cx.stroke()});
+requestAnimationFrame(f)})(0);
+/* sparks */
+const fx=$('#fx'),fc=fx.getContext('2d');let P2=[];
+function rf(){fx.width=innerWidth;fx.height=innerHeight}rf();addEventListener('resize',rf);
+function burst(x,y,n=14){const cs=['#ffd76a','#fff','#9a7bff','#7ff0c8','#ffa95c'];for(let i=0;i<n;i++){const a=Math.random()*6.283,v=2+Math.random()*4;P2.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,l:1,s:3+Math.random()*5,c:cs[i%5]})}}
+addEventListener('pointerdown',e=>burst(e.clientX,e.clientY));
+(function ff(){fc.clearRect(0,0,fx.width,fx.height);P2=P2.filter(p=>p.l>0);P2.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.l-=.022;fc.globalAlpha=Math.max(0,p.l);fc.fillStyle=p.c;fc.save();fc.translate(p.x,p.y);fc.rotate(p.l*6);const s=p.s*p.l+1;fc.beginPath();fc.moveTo(0,-s);fc.quadraticCurveTo(0,0,s,0);fc.quadraticCurveTo(0,0,0,s);fc.quadraticCurveTo(0,0,-s,0);fc.quadraticCurveTo(0,0,0,-s);fc.fill();fc.restore()});requestAnimationFrame(ff)})();
+/* stations + gating */
+const stn=$$('.stn'),secs=$$('section'),dn=$('#dots');
+secs.forEach(s=>{const o=document.createElement('div');o.className='orn';s.prepend(o);const a=document.createElement('a');a.href='#'+s.id;dn.append(a)});
+function unlock(n){const nx=$('#s'+(n+1));if(!nx||!nx.classList.contains('lock'))return;nx.classList.remove('lock');nx.classList.add('opened');$$('#s'+(n+1)+' .rv').forEach(e=>io.observe(e))}
+function done(n,msg){const c=$('#s'+n);if(!c||c.dataset.done)return;c.dataset.done=1;award('st'+n,msg||('أتممت المحطة '+ar(n)));
+if(n<8){unlock(n);const b=document.createElement('button');b.className='btn nxt';b.textContent='المحطة '+ar(n+1)+' ⬇';b.onclick=()=>$('#s'+(n+1)).scrollIntoView({behavior:'smooth'});c.append(b);if(!c.dataset.ns)setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'center'}),400)}}
+function reveal(id,n){const e=$('#'+id);e.style.display='block';e.classList.add('aft-in');$$('#'+id+' .rv').forEach(x=>{x.classList.add('in')});if(n)$('#s'+n).dataset.ns=1;setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),150)}
+addEventListener('scroll',()=>{sy=scrollY;$('#bar').style.width=100*scrollY/(document.body.scrollHeight-innerHeight)+'%';let k=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<innerHeight/2)k=i});[...dn.children].forEach((a,i)=>a.classList.toggle('on',i==k))},{passive:true});
+const once={};
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');}),{threshold:.2});
+$$('.rv').forEach(e=>io.observe(e));
+/* S1 */
+function rev(){$('#ans').textContent='قد يكون له معنى عظيم! فبعض الرؤى كانت بشارات من الله لأنبيائه. تعالوا نعرف قصة رؤيا يوسف عليه السلام ✨';done(1,'بدأت الرحلة')}
+/* S2 count stars */
+(function(){const A=$('#skA'),L=$('#lnA');let n=0;const pts=[];
+for(let i=0;i<11;i++){const ang=i/11*6.283-1.57+(i%2?.12:-.1),r=(i%2?30:41),x=50+r*Math.cos(ang),y=50+r*Math.sin(ang);pts.push([x,y]);const b=document.createElement('button');b.textContent='⭐';b.className='nm';b.style.left=x+'%';b.style.top=y+'%';b.style.animationDelay=(-i*.37)+'s';
+b.onclick=()=>{if(b.classList.contains('on'))return;b.classList.add('on');n++;$('#cntA').textContent=ar(n);
+if(n==11){$('#mA').textContent='كم كوكبًا رأى يوسف؟ اختر الجواب:';ask()}else $('#mA').textContent='واصل العدّ…'};A.append(b)}
+function ask(){const R=$('#askA');R.style.display='flex';[9,10,11,12].sort(()=>Math.random()-.5).forEach(v=>{const b=document.createElement('button');b.className='btn o';b.textContent=ar(v);b.onclick=()=>{if(v==11){R.style.display='none';$('#mA').textContent='أحسنت! عددتَ الكواكب بنفسك. بقي الشمس والقمر…';award('c11','اكتشفت عدد الكواكب');sunmoon()}else{b.style.opacity=.3;$('#mA').textContent='عُدّ النجوم مرة أخرى: العدّاد فوقها 🙂'}};R.append(b)})}
+function sunmoon(){let c=0;[['☀️','42%','50%','الشمس'],['🌙','58%','50%','القمر']].forEach(s=>{const b=document.createElement('button');b.textContent=s[0];b.style.left=s[1];b.style.top=s[2];b.style.fontSize='1.6rem';b.classList.add('nx');b.onclick=()=>{if(b.classList.contains('on'))return;b.classList.remove('nx');b.classList.add('on');c++;$('#mA').textContent='اضغط على '+(c<2?'الآخر أيضًا':'')+' — '+s[3]+' ساجدة له في الرؤيا!';if(c==2){A.classList.add('done');$('#cntA').textContent='١١ كوكبًا + الشمس + القمر';$('#tA').style.display='block';reveal('vA',2);$('#mA').textContent='اكتملت الرؤيا ✨';done(2,'اكتملت الرؤيا')}};A.append(b)})}})();
+/* S3 coins */
+(function(){const F=$('#cfd'),Bar=$('#cbar');let n=0,tot=12,alive=true;
+function spawn(){if(!alive)return;const c=document.createElement('button');c.className='dh fall';c.textContent='د';c.style.left=(6+Math.random()*80)+'%';c.style.animationDuration=(2.6+Math.random()*1.4)+'s';
+c.onclick=()=>{if(c.classList.contains('got'))return;c.classList.add('got');n++;Bar.style.width=Math.min(100,n/tot*100)+'%';if(n>=tot){alive=false;$('#mC').textContent='جمعتَ الدراهم! ثمنٌ قليل لنبيّ ابن نبيّ، فهم فيه من الزاهدين.';$('#cbox').classList.add('full');reveal('aC',4);done(4,'أتممت قصة البئر')}else $('#mC').textContent='أحسنت! واصل الجمع…'};
+c.addEventListener('animationend',()=>{if(!c.classList.contains('got'))c.remove()});F.append(c)}
+const iv=setInterval(()=>{if(!alive){clearInterval(iv);return}spawn()},650);spawn()})();
+/* S4 prison */
+(function(){const B=$('#bars'),cards=[['🔑 الفتيان في السجن','دخل معه السجن فتيان: قال قتادة كان أحدهما ساقي الملك والآخر خبّازه.'],['🌟 أخلاق يوسف','اشتهر في السجن بالجود والأمانة وصدق الحديث وحسن السمت وكثرة العبادة والإحسان إلى أهل السجن (ابن كثير).'],['⏳ بضع سنين','﴿فَلَبِثَ فِي السِّجْنِ بِضْعَ سِنِينَ﴾: قال مجاهد وقتادة: البضع ما بين الثلاث إلى التسع.']];let n=0,p=0,dir=1;const bs=[];
+for(let i=0;i<3;i++){const b=document.createElement('div');b.className='b1';b.textContent=ar(i+1);B.append(b);bs.push(b)}
+const zn=$('#zn'),mk=$('#mk');let zs=30;function nz(){zs=10+Math.random()*50;zn.style.left=zs+'%';zn.style.width='28%'}nz();
+(function mv(){p+=dir*1.7;if(p>=100){p=100;dir=-1}if(p<=0){p=0;dir=1}mk.style.left=p+'%';requestAnimationFrame(mv)})();
+$('#tbtn').onclick=()=>{if(n>=3)return;if(p>=zs&&p<=zs+28){const i=n++;bs[i].classList.add('op');$('#cell').style.setProperty('--lt',(n*.15).toFixed(2));const d=document.createElement('div');d.className='pcd';d.innerHTML='<b style="color:var(--gold)">'+cards[i][0]+'</b><br>'+cards[i][1];$('#pcards').append(d);nz();if(n<3)$('#mP').textContent='أحسنت! بقي '+ar(3-n)+(n==2?' قضيب واحد':' قضبان')+'…';else{$('#mP').textContent='انفتحت القضبان كلها، والفرج قريب بإذن الله ✨';$('#tbtn').disabled=true;reveal('aP',5);done(5,'خرجت من السجن')}}else{$('#mP').textContent='قريب! حاول مرة أخرى 🙂';$('#tmt').classList.add('sh');setTimeout(()=>$('#tmt').classList.remove('sh'),400)}}})();
+/* S6 granary quiz-game */
+(function(){const R=[['كيف نحفظ الحبوب لسنوات طويلة؟',['نتركها في سنبلها','نُخرجها ونتركها مكشوفة'],0],['كم نأكل منها في سنوات الخصب؟',['نأكل منها قليلًا','نأكل كل ما نشتهي'],0],['كيف نعمل في سنوات الخصب؟',['نزرع بجدّ ونصبر','نترك الزرع ونرتاح'],0]];let i=0;const Q=$('#gq'),O=$('#gopt'),F=$('#gf');
+function show(){O.innerHTML='';Q.textContent=R[i][0];R[i][1].map((t,k)=>[t,k]).sort(()=>Math.random()-.5).forEach(([t,k])=>{const b=document.createElement('button');b.className='btn o';b.textContent=t;b.onclick=()=>{if(k==R[i][2]){i++;F.style.height=(i/3*100)+'%';if(i<3){$('#mE').textContent='أحسنت! المخزن يمتلئ 🌾';show()}else{O.innerHTML='';Q.textContent='';$('#mE').textContent='امتلأ المخزن! «إني حفيظ عليم» ✨';award('g7','أمين المخزن');reveal('aG',6);done(6,'أمين المخزن')}}else{b.classList.add('no');b.disabled=true;$('#mE').textContent='فكّر مرة أخرى 🙂'}};O.append(b)})}
+show()})();
+/* S7 end of story */
+(function(){let i=0;const n=5,R=$('#ringE');const it=[];for(let k=0;k<13;k++){const e=document.createElement('i');e.textContent=k<11?'⭐':k==11?'☀️':'🌙';R.append(e);it.push(e)}
+function ring(p){const r=R.clientWidth*.38;it.forEach((e,k)=>{const a=k/13*6.283-1.57;const sx=(Math.random()-.5)*R.clientWidth*.8,sy2=(Math.random()-.5)*R.clientWidth*.8;e.style.transform=`translate(calc(-50% + ${r*Math.cos(a)}px),calc(-50% + ${r*Math.sin(a)}px)) scale(1.3)`})}
+$('#enb').onclick=()=>{if(i>=n-1)return;i++;$('#stp'+i).classList.add('on');if(i==n-1){$('#enb').disabled=true;$('#enb').textContent='انتهت القصة ✅';setTimeout(()=>ring(1),300);done(7,'وصلت إلى نهاية القصة')}else $('#stp'+i).scrollIntoView({behavior:'smooth',block:'nearest'})}})();
+/* S3 sun */
+const F3={sun:0,moon:0};function chk3(){if(F3.sun&&F3.moon)done(3,'عرفت سرّ الغروب وضوء القمر')}
+function hz(){const h=+$('#hr').value,y=34+h*1.1,l=50+h*.45,hue=12+h*.45;$('#hsun').style.cssText=`bottom:${y-35}px;background:hsl(${hue},100%,${l}%);box-shadow:0 0 60px hsl(${hue},100%,${l}%)`;
+$('#hz').style.background=h<35?`linear-gradient(#2a1745,hsl(${15+h},90%,${35+h}%))`:`linear-gradient(hsl(210,80%,${35+h*.2}%),hsl(200,90%,${70+h*.1}%))`;
+const path=1+(100-h)/100*9,sc=[3.6,2.2,1.25,.81,.66,.38];[...$('#spec').children].forEach((e,i)=>e.style.opacity=Math.exp(-.28*sc[i]*path).toFixed(2));
+$('#mH').textContent=h<20?'الطريق في الهواء طويل جدًا: ضاع الأزرق والأخضر، فبقي البرتقالي والأحمر!':h<60?'الطريق أطول: ضعف الأزرق، فمال الضوء إلى الأصفر.':'الشمس عالية: الطريق قصير، فيصلنا ضوء أبيض مائل للصفرة.';if(h<20){F3.sun=1;chk3()}}
+$('#hr').oninput=hz;hz();
+
+/* moon reflection */
+(function(){const T=$('#mtop'),V=$('#mview'),tx=T.getContext('2d'),vx=V.getContext('2d');let on=true,seen=new Set,off=false;
+function phaseName(p){const q=p>.5?1-p:p;const w=p<=.5?'متزايد':'متناقص';if(q<.03)return 'محاق (لا نراه)';if(q<.22)return 'هلال '+w;if(q<.28)return 'تربيع';if(q<.47)return 'أحدب '+w;return 'بدر (قمر كامل)'}
+function drawMoonDisc(c,x,y,R,p,lit){c.save();c.translate(x,y);c.beginPath();c.arc(0,0,R,0,7);c.fillStyle=lit?'#2a2f4d':'#1d2036';c.fill();if(lit){const q=p>.5?1-p:p,k=Math.cos(2*Math.PI*q),flip=p>.5?-1:1;c.save();c.scale(flip,1);c.beginPath();c.moveTo(0,-R);c.arc(0,0,R,-Math.PI/2,Math.PI/2,false);for(let a=Math.PI/2;a>=-Math.PI/2-.001;a-=.05){c.lineTo(R*k*Math.cos(a),R*Math.sin(a))}c.closePath();c.fillStyle='#f6efd5';c.shadowColor='#fff3b0';c.shadowBlur=18;c.fill();c.restore()}c.strokeStyle='rgba(255,255,255,.18)';c.beginPath();c.arc(0,0,R,0,7);c.stroke();c.restore()}
+function draw(){const p=$('#mr').value/100,ph=p*2*Math.PI;tx.clearRect(0,0,300,300);
+// sun
+const g=tx.createRadialGradient(24,150,2,24,150,on?70:28);g.addColorStop(0,on?'#fff6b0':'#3a3a4a');g.addColorStop(.4,on?'#ffb52e':'#2a2a38');g.addColorStop(1,'rgba(0,0,0,0)');tx.fillStyle=g;tx.beginPath();tx.arc(24,150,on?70:28,0,7);tx.fill();
+if(on){tx.strokeStyle='rgba(255,220,120,.35)';for(let i=-2;i<=2;i++){tx.beginPath();tx.moveTo(60,150+i*26);tx.lineTo(260,150+i*26);tx.setLineDash([6,8]);tx.stroke();tx.setLineDash([])}}
+// orbit + earth
+const cx=165,cy=150,r=82;tx.strokeStyle='rgba(255,255,255,.2)';tx.setLineDash([4,6]);tx.beginPath();tx.arc(cx,cy,r,0,7);tx.stroke();tx.setLineDash([]);
+const eg=tx.createRadialGradient(cx-8,cy-8,2,cx,cy,22);eg.addColorStop(0,'#8fd0ff');eg.addColorStop(1,'#163d86');tx.fillStyle=eg;tx.beginPath();tx.arc(cx,cy,22,0,7);tx.fill();
+if(on){tx.fillStyle='rgba(0,0,0,.45)';tx.beginPath();tx.arc(cx,cy,22,-Math.PI/2,Math.PI/2);tx.fill()}
+const mx=cx-r*Math.cos(ph),my=cy-r*Math.sin(ph);
+tx.save();tx.translate(mx,my);tx.beginPath();tx.arc(0,0,13,0,7);tx.fillStyle='#1d2036';tx.fill();if(on){tx.beginPath();tx.arc(0,0,13,Math.PI/2,Math.PI*1.5);tx.fillStyle='#f6efd5';tx.shadowColor='#fff3b0';tx.shadowBlur=14;tx.fill()}tx.strokeStyle='rgba(255,255,255,.25)';tx.beginPath();tx.arc(0,0,13,0,7);tx.stroke();tx.restore();
+tx.fillStyle='#b4bce0';tx.font='12px Tajawal';tx.fillText('الأرض',cx-16,cy+40);
+vx.clearRect(0,0,200,200);vx.fillStyle='#050818';vx.beginPath();vx.arc(100,100,80,0,7);vx.fill();drawMoonDisc(vx,100,100,64,p,on);
+$('#mM').textContent=on?('طور القمر الآن: '+phaseName(p)+' — النصف المواجه للشمس مضيء دائمًا، ونحن نرى منه جزءًا مختلفًا.'):'الشمس مطفأة: لا ضوء يصل إلى القمر، فصار مظلمًا! القمر لا يضيء بنفسه.';
+if(on){seen.add(Math.round(p*8)%8)}
+if(off&&seen.size>=4&&on&&!F3.moon){F3.moon=1;award('moonr','فهمت أن القمر يعكس ضوء الشمس');chk3()}}
+$('#sunb').onclick=function(){on=!on;if(!on)off=true;this.textContent=on?'☀️ الشمس مضيئة (اضغط لإطفائها)':'🌑 الشمس مطفأة (اضغط لإضاءتها)';draw()};
+$('#mr').oninput=draw;draw()})();
+/* S9 quiz */
+const Q=[['كم كوكبًا رأى يوسف عليه السلام في رؤياه؟',['٩','١١','١٢'],1],['من هم الشمس والقمر في تأويل الرؤيا عند المفسرين؟',['أبواه','إخوته','الملك'],0],['كيف وصف الله الثمن الذي بِيع به يوسف؟',['ثمن غالٍ','ثمن بخس','لا ثمن'],1],['ماذا قال يعقوب عليه السلام ليوسف عن رؤياه؟',['احكها لإخوتك','لا تقصص رؤياك على إخوتك','انسَها'],1],['ماذا فعل يوسف بالحبوب في سنوات الخصب؟',['أكلها كلها','تركها في سنبلها إلا قليلًا','باعها كلها'],1],['ماذا قال يوسف لإخوته حين عفا عنهم؟',['لا تثريب عليكم اليوم','لن أسامحكم أبدًا','ارحلوا عني'],0],['لماذا يصير ضوء الشمس برتقاليًا عند الغروب؟',['لأن الشمس تسخن','لأن الضوء يقطع طريقًا أطول في الهواء فيضيع الأزرق','لأن القمر يغطيها'],1]];let qi=0,qs=0;
+function rq(){const q=$('#quiz');if(qi>=Q.length){q.innerHTML=`<h3>🏅 رائد فضاء ماهر!</h3><p style="margin:auto">أجبت صحيحًا عن ${ar(qs)} من ${ar(Q.length)}<br>وجمعت <b style="color:var(--gold)">${ar(SC)} ⭐</b> في رحلتك!</p><br><button class="btn" onclick="qi=0;qs=0;rq()">أعد الاختبار</button>`;done(8,'أنهيت الرحلة');return}
+const [t,o,a]=Q[qi];q.innerHTML=`<h3>${ar(qi+1)}) ${t}</h3>`;o.forEach((x,i)=>{const b=document.createElement('button');b.className='btn o';b.textContent=x;b.onclick=()=>{if(i==a){b.className='btn ok';qs++;award('q'+qi,'إجابة صحيحة');setTimeout(()=>{qi++;rq()},700)}else b.className='btn no'};q.append(b)})}
+rq();
+
+</script>
+</body>
+</html>
